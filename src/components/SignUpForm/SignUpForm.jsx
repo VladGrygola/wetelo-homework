@@ -1,51 +1,51 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
-import { TextField, Grid, Typography, Button } from '@material-ui/core';
+import snakeCaseKeys from 'snakecase-keys';
+import camelcaseKeys from 'camelcase-keys';
+
+import { Grid, Typography, Button } from '@material-ui/core';
 import useStyles from './SignUpForm.styles';
 
-import { api } from '../../utils/api';
+import TextFieldWithError from '../TextFieldWithError/TextFieldWithError';
 
-const SignUp = ({ setCurrentUser }) => {
+import api from '../../utils/api';
+
+const SignUpForm = ({ setCurrentUser }) => {
   const [errorSubmitMessage, setErrorSubmitMessage] = useState('');
   const classes = useStyles();
 
-  const onSubmit = async (
-    { username, password, firstName, lastName, phone },
-    actions
-  ) => {
+  const onSubmit = async (formData, actions) => {
     actions.setSubmitting(true);
-    let res = null;
+
     const body = {
-      username,
-      password,
-      first_name: firstName,
-      last_name: lastName,
-      phone,
+      ...snakeCaseKeys(formData),
     };
+
+    delete body.confirm_password; // Not required by backend api
+
     try {
-      res = await api('api/auth/register', {
+      const response = await api('api/auth/register', {
         method: 'POST',
         body: JSON.stringify(body),
         headers: { Accept: 'application/json' },
       });
-      const resUser = {
-        id: res.user.id,
-        username: res.user.username,
-        password: res.user.password,
-        firstName: res.user.first_name,
-        lastName: res.user.last_name,
-        phone: res.user.phone,
-        createdAt: res.user.created_at,
-        updatedAt: res.user.updated_at,
-      };
-      setCurrentUser(resUser, res.token);
-    } catch (e) {
-      res.forEach((error) => setErrorSubmitMessage(error.message));
+
+      if (!response.user) {
+        let errors = '';
+        response.forEach((error) => {
+          errors += error.message;
+        });
+        setErrorSubmitMessage(`${errors}`);
+      } else {
+        const user = camelcaseKeys(response.user);
+        setCurrentUser(user, response.token);
+      }
+    } catch (error) {
+      console.error('Sign up request error:', error);
     } finally {
       actions.setSubmitting(false);
     }
@@ -75,7 +75,7 @@ const SignUp = ({ setCurrentUser }) => {
       .oneOf([yup.ref('password'), null], 'Passwords must match')
       .required('This field is required!'),
   });
-
+  /* eslint-disable react/prop-types */
   return (
     <>
       <Typography variant='h6'>Sign up</Typography>
@@ -92,8 +92,8 @@ const SignUp = ({ setCurrentUser }) => {
               justify='center'
               alignItems='flex-start'
             >
-              <TextField
-                className={classes.textField}
+              <TextFieldWithError
+                className={classes.TextFieldWithError}
                 type='text'
                 label='Username'
                 onChange={(e) => {
@@ -104,12 +104,11 @@ const SignUp = ({ setCurrentUser }) => {
                 value={props.values.username}
                 name='username'
                 disabled={props.isSubmitting}
+                isVisibleError={props.errors.username && props.touched.username}
+                errorMessage={props.errors.username}
               />
-              {props.errors.username && props.touched.username && (
-                <Typography color='error'>{props.errors.username}</Typography>
-              )}
-              <TextField
-                className={classes.textField}
+              <TextFieldWithError
+                className={classes.TextFieldWithError}
                 type='text'
                 label='First name'
                 onChange={props.handleChange}
@@ -117,12 +116,13 @@ const SignUp = ({ setCurrentUser }) => {
                 value={props.values.firstName}
                 name='firstName'
                 disabled={props.isSubmitting}
+                isVisibleError={
+                  props.errors.firstName && props.touched.firstName
+                }
+                errorMessage={props.errors.firstName}
               />
-              {props.errors.firstName && props.touched.firstName && (
-                <Typography color='error'>{props.errors.firstName}</Typography>
-              )}
-              <TextField
-                className={classes.textField}
+              <TextFieldWithError
+                className={classes.TextFieldWithError}
                 type='text'
                 label='Last name'
                 onChange={props.handleChange}
@@ -130,12 +130,11 @@ const SignUp = ({ setCurrentUser }) => {
                 value={props.values.lastName}
                 name='lastName'
                 disabled={props.isSubmitting}
+                isVisibleError={props.errors.lastName && props.touched.lastName}
+                errorMessage={props.errors.lastName}
               />
-              {props.errors.lastName && props.touched.lastName && (
-                <Typography color='error'>{props.errors.lastName}</Typography>
-              )}
-              <TextField
-                className={classes.textField}
+              <TextFieldWithError
+                className={classes.TextFieldWithError}
                 type='text'
                 label='Phone'
                 onChange={props.handleChange}
@@ -143,12 +142,11 @@ const SignUp = ({ setCurrentUser }) => {
                 value={props.values.phone}
                 name='phone'
                 disabled={props.isSubmitting}
+                isVisibleError={props.errors.phone && props.touched.phone}
+                errorMessage={props.errors.phone}
               />
-              {props.errors.phone && props.touched.phone && (
-                <Typography color='error'>{props.errors.phone}</Typography>
-              )}
-              <TextField
-                className={classes.textField}
+              <TextFieldWithError
+                className={classes.TextFieldWithError}
                 type='password'
                 label='Password'
                 onChange={props.handleChange}
@@ -156,12 +154,11 @@ const SignUp = ({ setCurrentUser }) => {
                 value={props.values.password}
                 name='password'
                 disabled={props.isSubmitting}
+                isVisibleError={props.errors.password && props.touched.password}
+                errorMessage={props.errors.password}
               />
-              {props.errors.password && props.touched.password && (
-                <Typography color='error'>{props.errors.password}</Typography>
-              )}
-              <TextField
-                className={classes.textField}
+              <TextFieldWithError
+                className={classes.TextFieldWithError}
                 type='password'
                 label='Confirm password'
                 onChange={props.handleChange}
@@ -169,13 +166,11 @@ const SignUp = ({ setCurrentUser }) => {
                 value={props.values.confirmPassword}
                 name='confirmPassword'
                 disabled={props.isSubmitting}
+                isVisibleError={
+                  props.errors.confirmPassword && props.touched.confirmPassword
+                }
+                errorMessage={props.errors.confirmPassword}
               />
-              {props.errors.confirmPassword &&
-                props.touched.confirmPassword && (
-                  <Typography color='error'>
-                    {props.errors.confirmPassword}
-                  </Typography>
-                )}
               {errorSubmitMessage ? (
                 <Typography color='error'>{errorSubmitMessage}</Typography>
               ) : null}
@@ -195,9 +190,8 @@ const SignUp = ({ setCurrentUser }) => {
     </>
   );
 };
-
-SignUp.propTypes = {
+SignUpForm.propTypes = {
   setCurrentUser: PropTypes.func.isRequired,
 };
 
-export default SignUp;
+export default SignUpForm;

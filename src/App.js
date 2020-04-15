@@ -7,6 +7,7 @@ import Header from './components/Header/Header';
 import HomePage from './pages/HomePage/HomePage';
 import SignInPage from './pages/SignInPage/SignInPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
+import NotAuthorizedPage from './pages/NotAuthorizedPage/NotAuthorizedPage';
 
 class App extends Component {
   constructor(props) {
@@ -19,16 +20,14 @@ class App extends Component {
 
   setCurrentUser = (user, token) => {
     const { history } = this.props;
-    this.setState({ currentUser: user });
+    this.setState({ currentUser: user }, () => history.push('/'));
     localStorage.setItem('authToken', JSON.stringify(token));
-    history.push('/');
   };
 
   signOut = () => {
     const { history } = this.props;
-    this.setState({ currentUser: null });
+    this.setState({ currentUser: null }, () => history.push('/signin'));
     localStorage.removeItem('authToken');
-    history.push('/signin');
   };
 
   render() {
@@ -37,11 +36,12 @@ class App extends Component {
       <>
         <Header currentUser={currentUser} signOut={this.signOut} />
         <Switch>
-          <Route
-            exact
-            path='/'
-            component={() => <HomePage currentUser={currentUser} />}
-          />
+          {currentUser ? (
+            <Route exact path='/' component={HomePage} />
+          ) : (
+            <Route exact path='/' component={NotAuthorizedPage} />
+          )}
+
           <Route
             path='/signin'
             component={() => (

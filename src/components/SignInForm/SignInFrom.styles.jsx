@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     alignSelf: 'center',
   },
-  textField: {
+  TextFieldWithError: {
     marginBottom: theme.spacing(2),
     width: '100%',
   },
