@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React from 'react';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Header from './components/Header/Header';
@@ -9,61 +10,35 @@ import SignInPage from './pages/SignInPage/SignInPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 import NotAuthorizedPage from './pages/NotAuthorizedPage/NotAuthorizedPage';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+import { selectCurrentUser } from './redux/user/user.selectors';
 
-    this.state = {
-      currentUser: null,
-    };
-  }
-
-  setCurrentUser = (user, token) => {
-    const { history } = this.props;
-    this.setState({ currentUser: user }, () => history.push('/'));
-    localStorage.setItem('authToken', JSON.stringify(token));
-  };
-
-  signOut = () => {
-    const { history } = this.props;
-    this.setState({ currentUser: null }, () => history.push('/signin'));
-    localStorage.removeItem('authToken');
-  };
-
-  render() {
-    const { currentUser } = this.state;
-    return (
-      <>
-        <Header currentUser={currentUser} signOut={this.signOut} />
-        <Switch>
-          {currentUser ? (
-            <Route exact path='/' component={HomePage} />
-          ) : (
-            <Route exact path='/' component={NotAuthorizedPage} />
-          )}
-
-          <Route
-            path='/signin'
-            component={() => (
-              <SignInPage setCurrentUser={this.setCurrentUser} />
-            )}
-          />
-          <Route
-            path='/signup'
-            component={() => (
-              <SignUpPage setCurrentUser={this.setCurrentUser} />
-            )}
-          />
-        </Switch>
-      </>
-    );
-  }
-}
-
-App.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+const App = ({ currentUser }) => {
+  return (
+    <BrowserRouter>
+      <Header />
+      <Switch>
+        {currentUser ? (
+          <Route exact path='/' component={HomePage} />
+        ) : (
+          <Route exact path='/' component={NotAuthorizedPage} />
+        )}
+        <Route path='/signin' component={SignInPage} />
+        <Route path='/signup' component={SignUpPage} />
+      </Switch>
+    </BrowserRouter>
+  );
 };
 
-export default App;
+App.propTypes = {
+  currentUser: PropTypes.instanceOf(Object),
+};
+
+App.defaultProps = {
+  currentUser: null,
+};
+
+const mapStateToProps = (state) => ({
+  currentUser: selectCurrentUser(state),
+});
+
+export default connect(mapStateToProps)(App);

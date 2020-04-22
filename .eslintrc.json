@@ -27,6 +27,7 @@
     "prettier/prettier": "error",
     "no-unused-vars": "error",
     "jsx-quotes": ["error", "prefer-single"],
-    "react/prop-types": "warn"
+    "react/prop-types": "warn",
+    "import/prefer-default-export": "warn"
   }
 }

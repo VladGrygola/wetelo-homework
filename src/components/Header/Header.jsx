@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import {
   AppBar,
@@ -14,6 +15,9 @@ import {
 import useStyles from './Header.styles';
 
 import { ReactComponent as Logo } from '../../logo.svg';
+
+import { removeCurrentUser } from '../../redux/user/user.actions';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 const Header = ({ currentUser, signOut }) => {
   const classes = useStyles();
@@ -71,4 +75,12 @@ Header.defaultProps = {
   currentUser: null,
 };
 
-export default Header;
+const mapStateToProps = (state) => ({
+  currentUser: selectCurrentUser(state),
+});
+
+const mapDispatchToProps = {
+  signOut: removeCurrentUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

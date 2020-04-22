@@ -1,6 +1,6 @@
 import { apiUrl } from '../constants/api';
 
-export const api = (url, params) =>
+export const stokkApi = (url, params) =>
   fetch(`${apiUrl}${url}`, {
     ...params,
     headers: {
@@ -9,4 +9,4 @@ export const api = (url, params) =>
     },
   }).then((data) => data.json());
 
-export default api;
+export default stokkApi;

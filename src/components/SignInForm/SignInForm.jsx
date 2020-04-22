@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
@@ -11,11 +14,14 @@ import useStyles from './SignInFrom.styles';
 
 import TextFieldWithError from '../TextFieldWithError/TextFieldWithError';
 
-import { api } from '../../utils/api';
+import { stokkApi as api } from '../../utils/api';
+
+import { setCurrentUser as setCurrentUserAction } from '../../redux/user/user.actions';
 
 const SignInForm = ({ setCurrentUser }) => {
   const [errorSubmitMessage, setErrorSubmitMessage] = useState('');
   const classes = useStyles();
+  const history = useHistory();
 
   const onSubmit = async (formData, actions) => {
     actions.setSubmitting(true);
@@ -35,7 +41,8 @@ const SignInForm = ({ setCurrentUser }) => {
         setErrorSubmitMessage(`${errors}`);
       } else {
         const user = camelcaseKeys(response.user);
-        setCurrentUser(user, response.token);
+        setCurrentUser({ ...user, token: response.token });
+        history.push('/');
       }
     } catch (error) {
       console.error('Sign in request error:', error);
@@ -130,4 +137,8 @@ SignInForm.propTypes = {
   setCurrentUser: PropTypes.func.isRequired,
 };
 
-export default SignInForm;
+const mapDispatchToProps = (dispatch) => ({
+  setCurrentUser: (user) => dispatch(setCurrentUserAction(user)),
+});
+
+export default connect(null, mapDispatchToProps)(SignInForm);
