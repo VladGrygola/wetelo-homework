@@ -8,7 +8,18 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   title: {
+    flexGrow: 0,
+  },
+  navigation: {
     flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  signOut: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 }));
 

@@ -10,6 +10,7 @@ import {
   Button,
   IconButton,
   Container,
+  Hidden,
 } from '@material-ui/core';
 
 import useStyles from './Header.styles';
@@ -41,13 +42,26 @@ const Header = ({ currentUser, signOut }) => {
             </Typography>
             {currentUser ? (
               <>
-                <Typography variant='h6' className={classes.title}>
-                  Welcome,&nbsp;
-                  {currentUser.firstName}
-                </Typography>
-                <Button onClick={signOut} color='inherit'>
-                  Sign Out
-                </Button>
+                <div className={classes.navigation}>
+                  <Button
+                    color='inherit'
+                    to='/categories'
+                    component={RouterLink}
+                  >
+                    Categories
+                  </Button>
+                </div>
+                <div className={classes.signOut}>
+                  <Hidden xsDown>
+                    <Typography variant='subtitle1' className={classes.title}>
+                      Welcome,&nbsp;
+                      {currentUser.firstName}
+                    </Typography>
+                  </Hidden>
+                  <Button onClick={signOut} color='inherit'>
+                    Sign Out
+                  </Button>
+                </div>
               </>
             ) : (
               <>
