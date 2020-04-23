@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -9,6 +9,7 @@ import HomePage from './pages/HomePage/HomePage';
 import SignInPage from './pages/SignInPage/SignInPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 import NotAuthorizedPage from './pages/NotAuthorizedPage/NotAuthorizedPage';
+import CategoriesPage from './pages/CategoriesPage/CategoriesPage';
 
 import { selectCurrentUser } from './redux/user/user.selectors';
 
@@ -16,15 +17,20 @@ const App = ({ currentUser }) => {
   return (
     <BrowserRouter>
       <Header />
-      <Switch>
-        {currentUser ? (
+      {currentUser ? (
+        <Switch>
           <Route exact path='/' component={HomePage} />
-        ) : (
-          <Route exact path='/' component={NotAuthorizedPage} />
-        )}
-        <Route path='/signin' component={SignInPage} />
-        <Route path='/signup' component={SignUpPage} />
-      </Switch>
+          <Route path='/categories' component={CategoriesPage} />
+          <Route path='/signin' component={() => <Redirect to='/' />} />
+          <Route path='/signup' component={() => <Redirect to='/' />} />
+        </Switch>
+      ) : (
+        <Switch>
+          <Route exact path='/signin' component={SignInPage} />
+          <Route exact path='/signup' component={SignUpPage} />
+          <Route path='/' component={NotAuthorizedPage} />
+        </Switch>
+      )}
     </BrowserRouter>
   );
 };

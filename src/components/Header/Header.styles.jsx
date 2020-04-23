@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 0,
   },
+  welcome: {
+    color: '#99bcf0',
+  },
   navigation: {
     flexGrow: 1,
     display: 'flex',
@@ -20,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  mrLeftAuto: {
+    marginLeft: 'auto',
   },
 }));
 

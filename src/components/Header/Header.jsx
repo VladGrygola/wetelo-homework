@@ -53,7 +53,7 @@ const Header = ({ currentUser, signOut }) => {
                 </div>
                 <div className={classes.signOut}>
                   <Hidden xsDown>
-                    <Typography variant='subtitle1' className={classes.title}>
+                    <Typography variant='subtitle1' className={classes.welcome}>
                       Welcome,&nbsp;
                       {currentUser.firstName}
                     </Typography>
@@ -65,7 +65,12 @@ const Header = ({ currentUser, signOut }) => {
               </>
             ) : (
               <>
-                <Button color='inherit' to='/signin' component={RouterLink}>
+                <Button
+                  color='inherit'
+                  to='/signin'
+                  component={RouterLink}
+                  className={classes.mrLeftAuto}
+                >
                   Sign In
                 </Button>
                 <Button color='inherit' to='/signup' component={RouterLink}>
