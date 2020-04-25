@@ -48,7 +48,7 @@ const SignUpForm = ({ setCurrentUser }) => {
         setErrorSubmitMessage(`${errors}`);
       } else {
         const user = camelcaseKeys(response.user);
-        setCurrentUser({ ...user, token: response.token });
+        setCurrentUser({ ...user, token: response.token.token });
         history.push('/');
       }
     } catch (error) {

@@ -4,7 +4,6 @@ import UserActionTypes from './user.types';
 
 const defaultState = {
   currentUser: null,
-  token: null,
 };
 
 const userReducer = handleActions(

@@ -9,4 +9,9 @@ export const stokkApi = (url, params) =>
     },
   }).then((data) => data.json());
 
+export const queryString = (params) =>
+  Object.keys(params)
+    .map((key) => key + '=' + params[key])
+    .join('&');
+
 export default stokkApi;

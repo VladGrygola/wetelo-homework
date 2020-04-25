@@ -3,9 +3,11 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 import userReducer from './user/user.reducer';
+import categoriesReducer from './categories/categories.reducer';
 
 const rootReducer = combineReducers({
   user: userReducer,
+  categories: categoriesReducer,
 });
 
 const persistConfig = {
