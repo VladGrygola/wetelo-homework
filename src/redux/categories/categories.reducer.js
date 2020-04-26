@@ -87,8 +87,8 @@ const categoriesReducer = handleActions(
       loading: false,
       deleteError: null,
       categories: [
-        ...state.categories.filter((c) =>
-          payload.some((id) => parseInt(c.id, 10) !== parseInt(id, 10))
+        ...state.categories.filter(
+          (c) => !payload.some((id) => parseInt(c.id, 10) === parseInt(id, 10))
         ),
       ],
     }),

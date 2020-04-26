@@ -14,4 +14,6 @@ export const queryString = (params) =>
     .map((key) => key + '=' + params[key])
     .join('&');
 
+export const queryStringFromArray = (array) => `[${array.join(',')}]`;
+
 export default stokkApi;
