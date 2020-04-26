@@ -4,7 +4,7 @@ import { Container, Paper } from '@material-ui/core';
 
 import useStyles from './CategoriesPage.styles';
 
-import { fetchCategoriesAsync } from '../../redux/categories/categories.actions';
+import { fetchCategoriesAsync } from '../../redux/categories/categories-thunk-actions/fetchCategories';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import {
   selectCategories,
@@ -25,7 +25,7 @@ const CategoriesPage = ({ user, fetchCategoriesRedux }) => {
     <Container>
       <Paper className={classes.categoriesTable}>
         <CategoriesListSerchToolsContainer />
-        <CategoriesListContainer />
+        <CategoriesListContainer userToken={user.token} />
       </Paper>
     </Container>
   );

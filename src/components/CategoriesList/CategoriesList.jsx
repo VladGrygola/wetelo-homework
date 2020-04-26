@@ -8,6 +8,8 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { Checkbox, Button, TextField, ButtonGroup } from '@material-ui/core';
 
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
+
 import useStyles from './CategoriesList.styles';
 
 const CategoriesList = ({
@@ -15,8 +17,12 @@ const CategoriesList = ({
   queryResponse,
   setQueryParams,
   queryParams,
+  userToken,
   fetchCategoriesRedux,
-  user,
+  addCategoryRedux,
+  deleteCategoryRedux,
+  updateCategoryRedux,
+  deleteCategoriesRedux,
 }) => {
   const didMountRef = useRef(false);
 
@@ -24,10 +30,25 @@ const CategoriesList = ({
   categories.forEach((category) => {
     defaultState[`${category.id}`] = false;
   });
+  const inputDefaultState = {};
+  categories.forEach((category) => {
+    inputDefaultState[`${category.id}`] = category.title;
+  });
 
   const [isEditable, setIsEditable] = useState({ ...defaultState });
   const [isSelected, setIsSelected] = useState({ ...defaultState });
+  const [updateFieldInput, setUpdateFieldInput] = useState({
+    ...inputDefaultState,
+  });
   const [isVisibleNewItem, setIsVisibleNewItem] = useState(false);
+  const [
+    isVisibleMultipleDeleteDialog,
+    setIsVisibleMultipleDeleteDialog,
+  ] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState({
+    visible: false,
+    id: -1,
+  });
   const [newItemText, setNewItemText] = useState('');
 
   const { page, limit, orderBy, order, q } = queryParams;
@@ -36,9 +57,9 @@ const CategoriesList = ({
 
   useEffect(() => {
     if (didMountRef.current) {
-      fetchCategoriesRedux(user.token, { page, limit, order, orderBy, q });
+      fetchCategoriesRedux(userToken, { page, limit, order, orderBy, q });
     } else didMountRef.current = true;
-  }, [page, limit, order, orderBy, q]);
+  }, [page, limit, order, orderBy, q, userToken, fetchCategoriesRedux]);
 
   const handleCheckboxClick = ({ target }) => {
     const temp = { ...isSelected };
@@ -51,8 +72,20 @@ const CategoriesList = ({
   const handleExitEditClick = ({ target }) => {
     setIsEditable({ ...isEditable, [target.id]: false });
   };
-  const handleDeleteClick = ({ target }) => {};
-  const handleUpdateClick = ({ target }) => {};
+  const handleDeleteClick = ({ target }) => {
+    setDeleteDialog({ visible: true, id: target.id });
+  };
+  const handleUpdateFieldInput = ({ target }) => {
+    setUpdateFieldInput({ ...updateFieldInput, [target.id]: target.value });
+  };
+  const handleUpdateClick = ({ target }) => {
+    const categoryToUpdate = categories.find(
+      (category) => parseInt(category.id, 10) === parseInt(target.id, 10)
+    );
+    categoryToUpdate.title = updateFieldInput[categoryToUpdate.id];
+    updateCategoryRedux(userToken, categoryToUpdate);
+  };
+  const handleAddCategory = () => addCategoryRedux(userToken, newItemText);
   return (
     <div>
       <div className={classes.queryInfo}>
@@ -75,43 +108,53 @@ const CategoriesList = ({
             component={AddIcon}
             onClick={() => setIsVisibleNewItem(true)}
           />
-          <Button>
-            <DeleteIcon />
-          </Button>
+          <Button
+            className={classes.button}
+            component={DeleteIcon}
+            onClick={() =>
+              Object.values(isSelected).some((v) => v)
+                ? setIsVisibleMultipleDeleteDialog(true)
+                : alert('Nothing to delete')
+            }
+          />
         </div>
       </div>
       <ul className={classes.ul}>
-        {categories.map((categoty) => (
-          <li key={categoty.id} className={classes.li}>
+        {categories.map((category) => (
+          <li key={category.id} className={classes.li}>
             <Checkbox
-              checked={isSelected[categoty.id]}
-              id={categoty.id.toString()}
+              checked={isSelected[category.id]}
+              id={category.id.toString()}
               onClick={handleCheckboxClick}
             />
-            {isEditable[categoty.id] ? (
-              <TextField defaultValue={categoty.title} />
+            {isEditable[category.id] ? (
+              <TextField
+                id={category.id}
+                value={updateFieldInput[category.id]}
+                onChange={handleUpdateFieldInput}
+              />
             ) : (
               <span>
                 <span>
-                  {categoty.title}
+                  {category.title}
                   &nbsp;
                 </span>
-                <span className={classes.id}>#{categoty.id}</span>
+                <span className={classes.id}>#{category.id}</span>
               </span>
             )}
 
             <span className={classes.tools}>
-              {isEditable[categoty.id] && (
+              {isEditable[category.id] && (
                 <>
                   <Button
                     className={classes.button}
-                    id={categoty.id}
+                    id={category.id}
                     onClick={handleUpdateClick}
                     component={CheckIcon}
                   />
                   <Button
                     className={classes.button}
-                    id={categoty.id}
+                    id={category.id}
                     onClick={handleExitEditClick}
                     component={CloseIcon}
                   />
@@ -120,13 +163,13 @@ const CategoriesList = ({
 
               <Button
                 className={classes.button}
-                id={categoty.id}
+                id={category.id}
                 onClick={handleEditClick}
                 component={EditIcon}
               />
               <Button
                 className={classes.button}
-                id={categoty.id}
+                id={category.id}
                 onClick={handleDeleteClick}
                 component={DeleteIcon}
               />
@@ -151,7 +194,7 @@ const CategoriesList = ({
           <Button
             className={classes.button}
             component={CheckIcon}
-            onClick={() => setIsVisibleNewItem(false)}
+            onClick={handleAddCategory}
           />
         </div>
       )}
@@ -163,23 +206,44 @@ const CategoriesList = ({
         >
           <Button
             disabled={page === 1}
-            onClick={({ target: { value } }) =>
-              setQueryParams({ ...queryParams, page: page - 1 })
-            }
+            onClick={() => setQueryParams({ ...queryParams, page: page - 1 })}
           >
             <ArrowBackIosIcon />
           </Button>
           <Button disabled>{page}</Button>
           <Button
             disabled={queryResponse.lastPage === page}
-            onClick={({ target: { value } }) =>
-              setQueryParams({ ...queryParams, page: page + 1 })
-            }
+            onClick={() => setQueryParams({ ...queryParams, page: page + 1 })}
           >
             <ArrowForwardIosIcon />
           </Button>
         </ButtonGroup>
       </div>
+      <ConfirmDialog
+        title='Deleting category'
+        open={deleteDialog.visible}
+        setOpen={(v) => setDeleteDialog({ ...deleteDialog, visible: v })}
+        onConfirm={() => deleteCategoryRedux(userToken, deleteDialog.id)}
+      >
+        <span>Are you shure you want to delete this category?</span>
+      </ConfirmDialog>
+      <ConfirmDialog
+        title='Deleting categories'
+        open={isVisibleMultipleDeleteDialog}
+        setOpen={setIsVisibleMultipleDeleteDialog}
+        onConfirm={() => {
+          const ids = [];
+          Object.entries(isSelected).forEach(
+            (en) => en[1] && ids.push(parseInt(en[0], 10))
+          );
+          deleteCategoriesRedux(userToken, ids);
+        }}
+      >
+        <span>
+          Are you shure you want to delete categories with id:&nbsp;
+          {Object.entries(isSelected).map((en) => en[1] && `#${en[0]}, `)}
+        </span>
+      </ConfirmDialog>
     </div>
   );
 };
