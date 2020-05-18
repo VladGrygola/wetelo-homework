@@ -7,7 +7,7 @@ const defaultState = {
   loading: true,
   fetchError: null,
   addError: null,
-  updataError: null,
+  updateError: null,
   deleteError: null,
   queryResponse: null,
   queryParams: {

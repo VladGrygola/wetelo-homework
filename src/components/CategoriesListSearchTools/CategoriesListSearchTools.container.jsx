@@ -5,7 +5,7 @@ import { setFetchParams } from '../../redux/categories/categories.actions';
 
 import { selectQueryParams } from '../../redux/categories/categories.selectors';
 
-import CategoriesListSerchTools from './CategoriesListSerchTools';
+import CategoriesListSearchTools from './CategoriesListSearchTools';
 
 const mapStateToProps = createStructuredSelector({
   queryParams: selectQueryParams,
@@ -15,9 +15,9 @@ const mapDispatchToProps = (dispatch) => ({
   setQueryParams: (params) => dispatch(setFetchParams(params)),
 });
 
-const CategoriesListSerchToolsContainer = connect(
+const CategoriesListSearchToolsContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(CategoriesListSerchTools);
+)(CategoriesListSearchTools);
 
-export default CategoriesListSerchToolsContainer;
+export default CategoriesListSearchToolsContainer;

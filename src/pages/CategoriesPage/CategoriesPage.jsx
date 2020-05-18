@@ -12,7 +12,7 @@ import {
 } from '../../redux/categories/categories.selectors';
 
 import CategoriesListContainer from '../../components/CategoriesList/CategoriesList.container';
-import CategoriesListSerchToolsContainer from '../../components/CategoriesListSerchTools/CategoriesListSerchTools.container';
+import CategoriesListSearchToolsContainer from '../../components/CategoriesListSearchTools/CategoriesListSearchTools.container';
 
 const CategoriesPage = ({ user, fetchCategoriesRedux }) => {
   const classes = useStyles();
@@ -24,7 +24,7 @@ const CategoriesPage = ({ user, fetchCategoriesRedux }) => {
   return (
     <Container>
       <Paper className={classes.categoriesTable}>
-        <CategoriesListSerchToolsContainer />
+        <CategoriesListSearchToolsContainer />
         <CategoriesListContainer userToken={user.token} />
       </Paper>
     </Container>

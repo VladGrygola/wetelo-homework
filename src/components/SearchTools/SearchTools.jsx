@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import {
   Typography,
   TextField,
@@ -8,9 +10,9 @@ import {
   MenuItem,
 } from '@material-ui/core';
 
-import useStyles from './CategoriesListSerchTools.styles';
+import useStyles from './SearchTools.styles';
 
-const CategoriesListSerchTools = ({ queryParams, setQueryParams }) => {
+const SearchTools = ({ queryParams, setQueryParams, orderByMap, title }) => {
   const classes = useStyles();
 
   const { limit, orderBy, order, q } = queryParams;
@@ -22,7 +24,7 @@ const CategoriesListSerchTools = ({ queryParams, setQueryParams }) => {
   return (
     <div className={classes.toolbar}>
       <Typography variant='h5' className={classes.title}>
-        Categories
+        {title}
       </Typography>
       <div className={classes.toolbarTools}>
         <TextField label='Query' name='q' value={q} onChange={handleChange} />
@@ -37,8 +39,9 @@ const CategoriesListSerchTools = ({ queryParams, setQueryParams }) => {
         <FormControl className={classes.orderBy}>
           <InputLabel>Order by</InputLabel>
           <Select name='orderBy' value={orderBy} onChange={handleChange}>
-            <MenuItem value='id'>Id</MenuItem>
-            <MenuItem value='title'>Title</MenuItem>
+            {orderByMap.map((menuItem) => (
+              <MenuItem value={menuItem.value}>{menuItem.title}</MenuItem>
+            ))}
           </Select>
         </FormControl>
         <FormControl className={classes.order}>
@@ -53,4 +56,21 @@ const CategoriesListSerchTools = ({ queryParams, setQueryParams }) => {
   );
 };
 
-export default CategoriesListSerchTools;
+SearchTools.propTypes = {
+  queryParams: PropTypes.shape({
+    limit: PropTypes.number,
+    orderBy: PropTypes.string,
+    order: PropTypes.string,
+    q: PropTypes.string,
+  }).isRequired,
+  setQueryParams: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  orderByMap: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+};
+
+export default SearchTools;
