@@ -22,7 +22,6 @@ export const updateCategoryAsync = (token, { id, title }) => {
         title,
       }),
       headers: {
-        Accept: 'application/json',
         Authorization: 'Bearer ' + token,
       },
     });

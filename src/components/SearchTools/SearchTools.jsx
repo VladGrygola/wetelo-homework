@@ -40,7 +40,9 @@ const SearchTools = ({ queryParams, setQueryParams, orderByMap, title }) => {
           <InputLabel>Order by</InputLabel>
           <Select name='orderBy' value={orderBy} onChange={handleChange}>
             {orderByMap.map((menuItem) => (
-              <MenuItem value={menuItem.value}>{menuItem.title}</MenuItem>
+              <MenuItem key={menuItem.value} value={menuItem.value}>
+                {menuItem.title}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>

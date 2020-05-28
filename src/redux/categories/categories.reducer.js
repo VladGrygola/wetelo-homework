@@ -21,7 +21,10 @@ const defaultState = {
 
 const categoriesReducer = handleActions(
   {
-    [CategoriesActionTypes.SET_FETCH_PARAMS]: (state, { payload }) => ({
+    [CategoriesActionTypes.SET_CATEGORIES_FETCH_PARAMS]: (
+      state,
+      { payload }
+    ) => ({
       ...state,
       queryParams: payload,
     }),

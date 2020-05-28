@@ -4,10 +4,14 @@ import storage from 'redux-persist/lib/storage';
 
 import userReducer from './user/user.reducer';
 import categoriesReducer from './categories/categories.reducer';
+import galleryReducer from './gallery/gallery.reducer';
+import postDialogReducer from './postDialog/postDialog.reducer';
 
 const rootReducer = combineReducers({
   user: userReducer,
   categories: categoriesReducer,
+  gallery: galleryReducer,
+  postDialog: postDialogReducer,
 });
 
 const persistConfig = {

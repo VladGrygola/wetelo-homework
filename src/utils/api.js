@@ -4,7 +4,7 @@ export const stokkApi = (url, params) =>
   fetch(`${apiUrl}${url}`, {
     ...params,
     headers: {
-      'Content-type': 'application/json; charset=UTF-8',
+      Accept: 'application/json',
       ...params.headers,
     },
   }).then((data) => data.json());

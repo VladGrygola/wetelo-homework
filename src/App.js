@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import Header from './components/Header/Header';
 
-import HomePage from './pages/HomePage/HomePage';
+import HomePageContainer from './pages/HomePage/HomePage.container';
 import SignInPage from './pages/SignInPage/SignInPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 import NotAuthorizedPage from './pages/NotAuthorizedPage/NotAuthorizedPage';
@@ -19,7 +19,7 @@ const App = ({ currentUser }) => {
       <Header />
       {currentUser ? (
         <Switch>
-          <Route exact path='/' component={HomePage} />
+          <Route exact path='/' component={HomePageContainer} />
           <Route path='/categories' component={CategoriesPage} />
           <Route path='/signin' component={() => <Redirect to='/' />} />
           <Route path='/signup' component={() => <Redirect to='/' />} />

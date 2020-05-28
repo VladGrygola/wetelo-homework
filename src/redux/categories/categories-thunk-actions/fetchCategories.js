@@ -30,7 +30,6 @@ export const fetchCategoriesAsync = (token, params = defaultParams) => {
     const response = await api(`api/categories?${queryParams}`, {
       method: 'GET',
       headers: {
-        Accept: 'application/json',
         Authorization: 'Bearer ' + token,
       },
     });

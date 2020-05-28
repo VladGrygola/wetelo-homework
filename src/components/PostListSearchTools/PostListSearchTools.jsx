@@ -7,7 +7,7 @@ const CategoriesListSearchTools = ({ queryParams, setQueryParams }) => {
     <SearchTools
       queryParams={queryParams}
       setQueryParams={setQueryParams}
-      title='Categories'
+      title='Posts'
       orderByMap={[
         { title: 'Id', value: 'id' },
         { title: 'Title', value: 'title' },
