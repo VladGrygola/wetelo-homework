@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
@@ -18,11 +19,11 @@ const CategoriesList = ({
   setQueryParams,
   queryParams,
   userToken,
-  fetchCategoriesRedux,
-  addCategoryRedux,
-  deleteCategoryRedux,
-  updateCategoryRedux,
-  deleteCategoriesRedux,
+  fetchCategories,
+  addCategory,
+  deleteCategory,
+  updateCategory,
+  deleteCategories,
 }) => {
   const didMountRef = useRef(false);
 
@@ -57,9 +58,9 @@ const CategoriesList = ({
 
   useEffect(() => {
     if (didMountRef.current) {
-      fetchCategoriesRedux(userToken, { page, limit, order, orderBy, q });
+      fetchCategories(userToken, { page, limit, order, orderBy, q });
     } else didMountRef.current = true;
-  }, [page, limit, order, orderBy, q, userToken, fetchCategoriesRedux]);
+  }, [page, limit, order, orderBy, q, userToken, fetchCategories]);
 
   const handleCheckboxClick = ({ target }) => {
     const temp = { ...isSelected };
@@ -83,9 +84,9 @@ const CategoriesList = ({
       (category) => parseInt(category.id, 10) === parseInt(target.id, 10)
     );
     categoryToUpdate.title = updateFieldInput[categoryToUpdate.id];
-    updateCategoryRedux(userToken, categoryToUpdate);
+    updateCategory(userToken, categoryToUpdate);
   };
-  const handleAddCategory = () => addCategoryRedux(userToken, newItemText);
+  const handleAddCategory = () => addCategory(userToken, newItemText);
   return (
     <div>
       <div className={classes.queryInfo}>
@@ -223,7 +224,7 @@ const CategoriesList = ({
         title='Deleting category'
         open={deleteDialog.visible}
         setOpen={(v) => setDeleteDialog({ ...deleteDialog, visible: v })}
-        onConfirm={() => deleteCategoryRedux(userToken, deleteDialog.id)}
+        onConfirm={() => deleteCategory(userToken, deleteDialog.id)}
       >
         <span>Are you shure you want to delete this category?</span>
       </ConfirmDialog>
@@ -236,7 +237,7 @@ const CategoriesList = ({
           Object.entries(isSelected).forEach(
             (en) => en[1] && ids.push(parseInt(en[0], 10))
           );
-          deleteCategoriesRedux(userToken, ids);
+          deleteCategories(userToken, ids);
         }}
       >
         <span>
@@ -246,6 +247,35 @@ const CategoriesList = ({
       </ConfirmDialog>
     </div>
   );
+};
+
+CategoriesList.propTypes = {
+  categories: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      createdAt: PropTypes.string.isRequired,
+      updatedAt: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  queryResponse: PropTypes.shape({
+    total: PropTypes.number.isRequired,
+    lastPage: PropTypes.number.isRequired,
+  }).isRequired,
+  setQueryParams: PropTypes.func.isRequired,
+  queryParams: PropTypes.shape({
+    order: PropTypes.string.isRequired,
+    orderBy: PropTypes.string.isRequired,
+    q: PropTypes.string.isRequired,
+    limit: PropTypes.number.isRequired,
+    page: PropTypes.number.isRequired,
+  }).isRequired,
+  userToken: PropTypes.string.isRequired,
+  fetchCategories: PropTypes.func.isRequired,
+  addCategory: PropTypes.func.isRequired,
+  deleteCategory: PropTypes.func.isRequired,
+  updateCategory: PropTypes.func.isRequired,
+  deleteCategories: PropTypes.func.isRequired,
 };
 
 export default CategoriesList;

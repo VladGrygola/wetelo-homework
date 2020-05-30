@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import PropTypes from 'prop-types';
 import { CircularProgress } from '@material-ui/core';
 
 const ImageUploadContainer = ({ file }) => {
@@ -25,6 +25,16 @@ const ImageUploadContainer = ({ file }) => {
   if (isLoading) return <CircularProgress />;
 
   return <img src={src} alt={file.name} height={300} />;
+};
+
+ImageUploadContainer.propTypes = {
+  file: PropTypes.shape({
+    name: PropTypes.string,
+  }),
+};
+
+ImageUploadContainer.defaultProps = {
+  file: undefined,
 };
 
 export default ImageUploadContainer;

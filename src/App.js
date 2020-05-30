@@ -6,10 +6,11 @@ import PropTypes from 'prop-types';
 import Header from './components/Header/Header';
 
 import HomePageContainer from './pages/HomePage/HomePage.container';
+import PostPageContainer from './pages/PostPage/PostPage.container';
 import SignInPage from './pages/SignInPage/SignInPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 import NotAuthorizedPage from './pages/NotAuthorizedPage/NotAuthorizedPage';
-import CategoriesPage from './pages/CategoriesPage/CategoriesPage';
+import CategoriesPageContainer from './pages/CategoriesPage/CategoriesPage.container';
 
 import { selectCurrentUser } from './redux/user/user.selectors';
 
@@ -20,7 +21,9 @@ const App = ({ currentUser }) => {
       {currentUser ? (
         <Switch>
           <Route exact path='/' component={HomePageContainer} />
-          <Route path='/categories' component={CategoriesPage} />
+          <Route exact path='/gallery' component={HomePageContainer} />
+          <Route exact path='/gallery/:id' component={PostPageContainer} />
+          <Route path='/categories' component={CategoriesPageContainer} />
           <Route path='/signin' component={() => <Redirect to='/' />} />
           <Route path='/signup' component={() => <Redirect to='/' />} />
         </Switch>

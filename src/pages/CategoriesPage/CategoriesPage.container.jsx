@@ -1,22 +1,22 @@
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
+import { fetchCategoriesAsync } from '../../redux/categories/categories-thunk-actions/fetchCategories';
 import { selectCurrentUserToken } from '../../redux/user/user.selectors';
-import { fetchPostsAsync } from '../../redux/gallery/gallery-thunk-actions/fetchPosts';
 
-import HomePage from './HomePage';
+import CategoriesPage from './CategoriesPage';
 
 const mapStateToProps = createStructuredSelector({
   userToken: selectCurrentUserToken,
 });
 
 const mapDispatchtoProps = (dispatch) => ({
-  fetchPosts: (token) => dispatch(fetchPostsAsync(token)),
+  fetchCategories: (token) => dispatch(fetchCategoriesAsync(token)),
 });
 
-const HomePageContainer = connect(
+const CategoriesPageContainer = connect(
   mapStateToProps,
   mapDispatchtoProps
-)(HomePage);
+)(CategoriesPage);
 
-export default HomePageContainer;
+export default CategoriesPageContainer;

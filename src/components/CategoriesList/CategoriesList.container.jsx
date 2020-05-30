@@ -29,14 +29,13 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchCategoriesRedux: (token, params) =>
+  fetchCategories: (token, params) =>
     dispatch(fetchCategoriesAsync(token, params)),
   setQueryParams: (params) => dispatch(setFetchParams(params)),
-  addCategoryRedux: (token, title) => dispatch(addCategoryAsync(token, title)),
-  deleteCategoryRedux: (token, id) => dispatch(deleteCategoryAsync(token, id)),
-  deleteCategoriesRedux: (token, ids) =>
-    dispatch(deleteCategoriesAsync(token, ids)),
-  updateCategoryRedux: (token, category) =>
+  addCategory: (token, title) => dispatch(addCategoryAsync(token, title)),
+  deleteCategory: (token, id) => dispatch(deleteCategoryAsync(token, id)),
+  deleteCategories: (token, ids) => dispatch(deleteCategoriesAsync(token, ids)),
+  updateCategory: (token, category) =>
     dispatch(updateCategoryAsync(token, category)),
 });
 

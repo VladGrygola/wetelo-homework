@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import {
@@ -39,7 +40,10 @@ const PostFormDialog = ({
     };
     addPost(userToken, body);
     setIsVisibleResult(true);
-    setTimeout(() => setIsVisibleResult(false), 2000);
+    setTimeout(() => {
+      setIsVisibleResult(false);
+      setIsOpen(false);
+    }, 2000);
   };
   const validationSchema = yup.object().shape({
     title: yup.string().required('This field is required!'),
@@ -170,4 +174,27 @@ const PostFormDialog = ({
     </Dialog>
   );
 };
+
+PostFormDialog.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
+  post: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    category: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+    }),
+  }),
+  isSubmittingQuery: PropTypes.bool.isRequired,
+  error: PropTypes.instanceOf(Object),
+  addPost: PropTypes.func.isRequired,
+  userToken: PropTypes.string.isRequired,
+};
+
+PostFormDialog.defaultProps = {
+  post: undefined,
+  error: undefined,
+};
+
 export default PostFormDialog;

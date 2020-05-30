@@ -12,7 +12,13 @@ import {
 
 import useStyles from './SearchTools.styles';
 
-const SearchTools = ({ queryParams, setQueryParams, orderByMap, title }) => {
+const SearchTools = ({
+  queryParams,
+  setQueryParams,
+  orderByMap,
+  title,
+  limitValues = [5, 10, 15],
+}) => {
   const classes = useStyles();
 
   const { limit, orderBy, order, q } = queryParams;
@@ -31,9 +37,11 @@ const SearchTools = ({ queryParams, setQueryParams, orderByMap, title }) => {
         <FormControl className={classes.limit}>
           <InputLabel>Limit</InputLabel>
           <Select name='limit' value={limit} onChange={handleChange}>
-            <MenuItem value={5}>5</MenuItem>
-            <MenuItem value={10}>10</MenuItem>
-            <MenuItem value={15}>15</MenuItem>
+            {limitValues.map((value) => (
+              <MenuItem key={value} value={value}>
+                {value}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
         <FormControl className={classes.orderBy}>
@@ -73,6 +81,11 @@ SearchTools.propTypes = {
       value: PropTypes.string.isRequired,
     })
   ).isRequired,
+  limitValues: PropTypes.arrayOf(Number),
+};
+
+SearchTools.defaultProps = {
+  limitValues: [5, 10, 15],
 };
 
 export default SearchTools;

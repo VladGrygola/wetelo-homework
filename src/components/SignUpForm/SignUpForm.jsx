@@ -37,7 +37,10 @@ const SignUpForm = ({ setCurrentUser }) => {
       const response = await api('api/auth/register', {
         method: 'POST',
         body: JSON.stringify(body),
-        headers: { Accept: 'application/json' },
+        headers: {
+          Accept: 'application/json',
+          'Content-type': 'application/json; charset=utf-8',
+        },
       });
 
       if (!response.user) {

@@ -23,6 +23,7 @@ export const addCategoryAsync = (token, title) => {
       }),
       headers: {
         Authorization: 'Bearer ' + token,
+        'Content-type': 'application/json; charset=utf-8',
       },
     });
     if (response.error) dispatch(addCategoryFailure(response.error));

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -36,4 +37,14 @@ const ConfirmDialog = ({ title, children, open, setOpen, onConfirm }) => {
     </Dialog>
   );
 };
+
+ConfirmDialog.propTypes = {
+  title: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/require-default-props
+  children: PropTypes.instanceOf(Object),
+  open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func.isRequired,
+};
+
 export default ConfirmDialog;

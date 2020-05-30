@@ -30,7 +30,10 @@ const SignInForm = ({ setCurrentUser }) => {
       const response = await api('api/auth/login', {
         method: 'POST',
         body: JSON.stringify(formData), // formData is already in snake-case
-        headers: { Accept: 'application/json' },
+        headers: {
+          Accept: 'application/json',
+          'Content-type': 'application/json; charset=utf-8',
+        },
       });
 
       if (response.errors) {

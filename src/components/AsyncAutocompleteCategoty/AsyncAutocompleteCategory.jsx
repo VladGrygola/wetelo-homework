@@ -1,12 +1,11 @@
-// *https://www.registers.service.gov.uk/registers/country/use-the-api*
 import React from 'react';
+import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import { Autocomplete } from '@material-ui/lab';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Typography } from '@material-ui/core';
 
-export default function AsyncAutocompleteCategory({
-  name,
+const AsyncAutocompleteCategory = ({
   onChange,
   onBlur,
   value,
@@ -20,7 +19,7 @@ export default function AsyncAutocompleteCategory({
   fetchingErrorMessage,
   userToken,
   fetchCategoriesListByQuery,
-}) {
+}) => {
   const [open, setOpen] = React.useState(false);
   const [fieldValue, setFieldValue] = React.useState('');
   React.useEffect(() => {
@@ -40,7 +39,6 @@ export default function AsyncAutocompleteCategory({
           setOpen(false);
         }}
         onChange={onChange}
-        name={name}
         onBlur={onBlur}
         value={value}
         getOptionSelected={(option, value) => option.name === value.name}
@@ -75,4 +73,40 @@ export default function AsyncAutocompleteCategory({
       )}
     </>
   );
-}
+};
+
+AsyncAutocompleteCategory.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
+  value: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+  }),
+  errorMessage: PropTypes.string,
+  isVisibleError: PropTypes.bool,
+  variant: PropTypes.string,
+  disabled: PropTypes.bool.isRequired,
+  // Redux:
+  isLoading: PropTypes.bool,
+  categories: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
+    })
+  ),
+  fetchingErrorMessage: PropTypes.string,
+  userToken: PropTypes.string.isRequired,
+  fetchCategoriesListByQuery: PropTypes.func.isRequired,
+};
+
+AsyncAutocompleteCategory.defaultProps = {
+  value: null,
+  errorMessage: '',
+  isVisibleError: false,
+  isLoading: false,
+  variant: undefined,
+  categories: [],
+  fetchingErrorMessage: '',
+};
+
+export default AsyncAutocompleteCategory;

@@ -1,44 +1,33 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import { Container, Paper } from '@material-ui/core';
-
-import useStyles from './CategoriesPage.styles';
-
-import { fetchCategoriesAsync } from '../../redux/categories/categories-thunk-actions/fetchCategories';
-import { selectCurrentUser } from '../../redux/user/user.selectors';
-import {
-  selectCategories,
-  selectErrorMessage,
-} from '../../redux/categories/categories.selectors';
 
 import CategoriesListContainer from '../../components/CategoriesList/CategoriesList.container';
 import CategoriesListSearchToolsContainer from '../../components/CategoriesListSearchTools/CategoriesListSearchTools.container';
 
-const CategoriesPage = ({ user, fetchCategoriesRedux }) => {
+import useStyles from './CategoriesPage.styles';
+
+const CategoriesPage = ({ userToken, fetchCategories }) => {
   const classes = useStyles();
 
   useEffect(() => {
-    fetchCategoriesRedux(user.token);
-  }, [fetchCategoriesRedux, user]);
+    fetchCategories(userToken);
+  }, [fetchCategories, userToken]);
 
   return (
     <Container>
       <Paper className={classes.categoriesTable}>
         <CategoriesListSearchToolsContainer />
-        <CategoriesListContainer userToken={user.token} />
+        <CategoriesListContainer userToken={userToken} />
       </Paper>
     </Container>
   );
 };
 
-const mapStateToProps = (state) => ({
-  user: selectCurrentUser(state),
-  categoriesRedux: selectCategories(state),
-  errorMessage: selectErrorMessage(state),
-});
+CategoriesPage.propTypes = {
+  userToken: PropTypes.string.isRequired,
+  fetchCategories: PropTypes.func.isRequired,
+};
 
-const mapDispatchtoProps = (dispatch) => ({
-  fetchCategoriesRedux: (token) => dispatch(fetchCategoriesAsync(token)),
-});
-
-export default connect(mapStateToProps, mapDispatchtoProps)(CategoriesPage);
+export default CategoriesPage;

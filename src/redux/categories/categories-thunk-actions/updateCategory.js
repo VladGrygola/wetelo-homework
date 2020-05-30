@@ -23,6 +23,7 @@ export const updateCategoryAsync = (token, { id, title }) => {
       }),
       headers: {
         Authorization: 'Bearer ' + token,
+        'Content-type': 'application/json; charset=utf-8',
       },
     });
     if (response.error) dispatch(updateCategoryFailure(response.error));

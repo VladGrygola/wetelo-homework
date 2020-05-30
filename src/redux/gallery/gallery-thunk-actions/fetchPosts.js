@@ -17,8 +17,8 @@ export const fetchPostsFailure = (error) => ({
 
 const defaultParams = {
   page: 1,
-  limit: 5,
-  orderBy: 'id',
+  limit: 4,
+  orderBy: 'title',
   order: 'asc',
   q: '',
 };

@@ -24,6 +24,7 @@ export const deleteCategoriesAsync = (token, ids) => {
         method: 'DELETE',
         headers: {
           Authorization: 'Bearer ' + token,
+          'Content-type': 'application/json; charset=utf-8',
         },
       }
     );

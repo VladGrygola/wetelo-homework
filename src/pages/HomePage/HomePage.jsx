@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
-
+import PropTypes from 'prop-types';
 import { Grid, Container, Button } from '@material-ui/core';
 
 import PostListSearchToolsContainer from '../../components/PostListSearchTools/PostListSearchTools.container';
-import PostList from '../../components/PostList/PostList';
+import PostListContainer from '../../components/PostList/PostList.container';
 
 import PostFormDialogContainer from '../../components/PostFormDialog/PostFormDialog.container';
 
 import useStyles from './HomePage.styles';
 
-const HomePage = ({ user, fetchPosts }) => {
-  const [inOpenNewPostDialog, setIsOperNewPostDialog] = useState(true);
+const HomePage = ({ userToken, fetchPosts }) => {
+  const [inOpenNewPostDialog, setIsOperNewPostDialog] = useState(false);
 
   const classes = useStyles();
   useEffect(() => {
-    fetchPosts(user.token);
-  }, [fetchPosts, user]);
+    fetchPosts(userToken);
+  }, [fetchPosts, userToken]);
 
   return (
     <>
@@ -24,13 +24,20 @@ const HomePage = ({ user, fetchPosts }) => {
           <Grid item sm={12} md={6}>
             <PostListSearchToolsContainer />
           </Grid>
-          <Grid container item sm={12} md={6} direction='row-reverse'>
+          <Grid
+            container
+            item
+            sm={12}
+            md={6}
+            direction='row-reverse'
+            justify='center'
+          >
             <Button onClick={() => setIsOperNewPostDialog(true)}>
               New post
             </Button>
           </Grid>
         </Grid>
-        <PostList />
+        <PostListContainer />
       </Container>
       <PostFormDialogContainer
         isOpen={inOpenNewPostDialog}
@@ -38,6 +45,11 @@ const HomePage = ({ user, fetchPosts }) => {
       />
     </>
   );
+};
+
+HomePage.propTypes = {
+  userToken: PropTypes.string.isRequired,
+  fetchPosts: PropTypes.func.isRequired,
 };
 
 export default HomePage;

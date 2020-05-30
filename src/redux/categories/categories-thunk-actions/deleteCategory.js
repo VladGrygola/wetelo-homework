@@ -23,6 +23,7 @@ export const deleteCategoryAsync = (token, id) => {
       headers: {
         Accept: 'application/json',
         Authorization: 'Bearer ' + token,
+        'Content-type': 'application/json; charset=utf-8',
       },
     });
     if (response.error) dispatch(deleteCategoryFailure(response.error));

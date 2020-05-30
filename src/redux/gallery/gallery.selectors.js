@@ -3,19 +3,24 @@ import { path } from 'ramda';
 
 const selectGalleryReducer = (state) => state.gallery;
 
-export const selectImages = createSelector(
+export const selectPosts = createSelector(
   [selectGalleryReducer],
-  (gallery) => gallery.images
+  (gallery) => gallery.posts
+);
+
+export const selectIsLoadingPosts = createSelector(
+  [selectGalleryReducer],
+  (gallery) => gallery.isLoadingPosts
+);
+
+export const selectisLoadingNextPagePosts = createSelector(
+  [selectGalleryReducer],
+  (gallery) => gallery.isLoadingNextPagePosts
 );
 
 export const selectErrorMessage = createSelector(
   [selectGalleryReducer],
   (gallery) => path[(['error', 'message'], gallery)]
-);
-
-export const selectIsCategoriesLoading = createSelector(
-  [selectGalleryReducer],
-  (gallery) => gallery.loading
 );
 
 export const selectQueryResponse = createSelector(
