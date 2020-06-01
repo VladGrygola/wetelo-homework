@@ -10,6 +10,7 @@ import {
 } from '../../redux/gallery/gallery.selectors';
 
 import { fetchPostByIdAsync } from '../../redux/gallery/gallery-thunk-actions/fetchPostById';
+import { deletePostAsync } from '../../redux/gallery/gallery-thunk-actions/deletePost';
 
 import PostPage from './PostPage';
 import WithPreloader from '../../components/WithPreloader/WithPreloader';
@@ -23,6 +24,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchtoProps = (dispatch) => ({
   fetchPostById: (token, id) => dispatch(fetchPostByIdAsync(token, id)),
+  deletePost: (token, id) => dispatch(deletePostAsync(token, id)),
 });
 
 const PostPageContainer = compose(

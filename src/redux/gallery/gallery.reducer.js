@@ -9,6 +9,7 @@ const defaultState = {
   isLoadingPostById: false,
   fetchError: null,
   fetchByIdError: null,
+  deleteError: null,
   notFoundList: [],
   queryResponse: null,
   queryParams: {
@@ -93,6 +94,21 @@ const galleryReducer = handleActions(
         posts: [...posts, payload],
       };
     },
+    [GalleryActionTypes.DELETE_POST_START]: (state) => ({
+      ...state,
+      isLoadingPostById: true,
+    }),
+    [GalleryActionTypes.DELETE_POST_FALIURE]: (state, { payload }) => ({
+      ...state,
+      isLoadingPostById: false,
+      deleteError: payload,
+    }),
+    [GalleryActionTypes.DELETE_POST_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      isLoadingPostById: false,
+      deleteError: null,
+      posts: state.posts.filter((p) => p.id !== payload),
+    }),
   },
   defaultState
 );

@@ -11,6 +11,8 @@ const PostPage = ({
   userToken,
   fetchPostById,
   notFoundList,
+  deletePost,
+  deleteError,
 }) => {
   const id = parseInt(pathname.split('/')[2], 10);
   const post = posts.find((row) => row.id === id);
@@ -28,7 +30,12 @@ const PostPage = ({
       {!post ? (
         <Typography color='error'>Not found</Typography>
       ) : (
-        <PostPageContent post={post} />
+        <PostPageContent
+          post={post}
+          userToken={userToken}
+          deletePost={deletePost}
+          error={deleteError}
+        />
       )}
     </Container>
   );

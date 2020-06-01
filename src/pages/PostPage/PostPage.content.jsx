@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import { Grid, Typography, Button } from '@material-ui/core';
 
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
@@ -10,10 +9,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { apiUrl } from '../../constants/api';
 
 import PostFormDialogContainer from '../../components/PostFormDialog/PostFormDialog.container';
+import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog';
 
 import useStyles from './PostPage.styles';
 
-const PostPageContent = ({ post }) => {
+const PostPageContent = ({ post, userToken, deletePost, error }) => {
   const classes = useStyles();
   const { id, title, description, updatedAt, createdAt, category, img } = post;
 
@@ -24,6 +24,7 @@ const PostPageContent = ({ post }) => {
   };
   const [zoomValue, setZoomValue] = useState(ZOOM_VALUES.FIT_IN);
   const [imageStyle, setImageStyle] = useState(undefined);
+  const [isOpenEditDialog, setIsOpenEditDialog] = useState(false);
   const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
 
   useEffect(() => {
@@ -99,10 +100,10 @@ const PostPageContent = ({ post }) => {
           <Button>
             <ZoomOutIcon onClick={handleZoomOut} />
           </Button>
-          <Button onClick={() => setIsOpenDeleteDialog(true)}>
+          <Button onClick={() => setIsOpenEditDialog(true)}>
             <EditIcon />
           </Button>
-          <Button>
+          <Button onClick={() => setIsOpenDeleteDialog(true)}>
             <DeleteIcon />
           </Button>
         </Grid>
@@ -137,9 +138,16 @@ const PostPageContent = ({ post }) => {
       </Grid>
       <PostFormDialogContainer
         post={post}
-        isOpen={isOpenDeleteDialog}
-        setIsOpen={setIsOpenDeleteDialog}
+        isOpen={isOpenEditDialog}
+        setIsOpen={setIsOpenEditDialog}
       />
+      <ConfirmDialog
+        open={isOpenDeleteDialog}
+        setOpen={setIsOpenDeleteDialog}
+        onConfirm={() => deletePost(userToken, id)}
+      >
+        <span>Are you shure you want to delete this post?</span>
+      </ConfirmDialog>
     </Grid>
   );
 };
