@@ -6,7 +6,10 @@ const defaultState = {
   posts: [],
   isLoadingPosts: true,
   isLoadingNextPagePosts: false,
+  isLoadingPostById: false,
   fetchError: null,
+  fetchByIdError: null,
+  notFoundList: [],
   queryResponse: null,
   queryParams: {
     page: 1,
@@ -33,6 +36,7 @@ const galleryReducer = handleActions(
       fetchError: null,
       posts: payload.posts,
       queryResponse: payload.queryResponse,
+      queryParams: { ...state.queryParams, page: payload.queryResponse.page },
     }),
     [GalleryActionTypes.FETCH_POSTS_FALIURE]: (state, { payload }) => ({
       ...state,
@@ -62,6 +66,33 @@ const galleryReducer = handleActions(
       isLoadingNextPagePosts: false,
       fetchError: payload,
     }),
+    [GalleryActionTypes.FETCH_POSTS_BY_ID_START]: (state) => ({
+      ...state,
+      isLoadingPostById: true,
+    }),
+    [GalleryActionTypes.FETCH_POSTS_BY_ID_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      isLoadingPostById: false,
+      fetchByIdError: null,
+      posts: [...state.posts, payload],
+    }),
+    [GalleryActionTypes.FETCH_POSTS_BY_ID_FALIURE]: (state, { payload }) => ({
+      ...state,
+      isLoadingPostById: false,
+      fetchByIdError: payload,
+    }),
+    [GalleryActionTypes.FETCH_POSTS_BY_ID_NOT_FOUND]: (state, { payload }) => ({
+      ...state,
+      notFoundList: [...state.notFoundList, payload],
+      isLoadingPostById: false,
+    }),
+    [GalleryActionTypes.UPDATE_POST]: (state, { payload }) => {
+      const posts = state.posts.filter((post) => post.id !== payload.id);
+      return {
+        ...state,
+        posts: [...posts, payload],
+      };
+    },
   },
   defaultState
 );

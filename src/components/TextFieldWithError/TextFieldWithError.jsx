@@ -16,12 +16,13 @@ const TextFieldWithError = ({
 );
 
 TextFieldWithError.propTypes = {
-  isVisibleError: PropTypes.bool.isRequired,
+  isVisibleError: PropTypes.bool,
   errorMessage: PropTypes.string,
 };
 
 TextFieldWithError.defaultProps = {
   errorMessage: '',
+  isVisibleError: false,
 };
 
 export default TextFieldWithError;

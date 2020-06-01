@@ -13,6 +13,11 @@ export const selectIsLoadingPosts = createSelector(
   (gallery) => gallery.isLoadingPosts
 );
 
+export const selectIsLoadingPostById = createSelector(
+  [selectGalleryReducer],
+  (gallery) => gallery.isLoadingPostById
+);
+
 export const selectisLoadingNextPagePosts = createSelector(
   [selectGalleryReducer],
   (gallery) => gallery.isLoadingNextPagePosts
@@ -31,4 +36,9 @@ export const selectQueryResponse = createSelector(
 export const selectQueryParams = createSelector(
   [selectGalleryReducer],
   (gallery) => gallery.queryParams
+);
+
+export const selectNotFoundList = createSelector(
+  [selectGalleryReducer],
+  (gallery) => gallery.notFoundList
 );

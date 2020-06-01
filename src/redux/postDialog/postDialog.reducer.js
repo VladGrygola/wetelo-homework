@@ -39,10 +39,26 @@ const postDialogReducer = handleActions(
       isSubmitting: true,
     }),
     [PostDialogActionTypes.ADD_POST_SUCCESS]: (state) => ({
+      ...state,
       isSubmitting: false,
       submittingError: null,
     }),
     [PostDialogActionTypes.ADD_POST_FALIURE]: (state, { payload }) => ({
+      ...state,
+      isSubmitting: false,
+      submittingError: payload,
+    }),
+    [PostDialogActionTypes.EDIT_POST_START]: (state) => ({
+      ...state,
+      isSubmitting: true,
+    }),
+    [PostDialogActionTypes.EDIT_POST_SUCCESS]: (state) => ({
+      ...state,
+      isSubmitting: false,
+      submittingError: null,
+    }),
+    [PostDialogActionTypes.EDIT_POST_FALIURE]: (state, { payload }) => ({
+      ...state,
       isSubmitting: false,
       submittingError: payload,
     }),

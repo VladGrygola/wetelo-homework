@@ -7,11 +7,11 @@ import { apiUrl } from '../../constants/api';
 
 import useStyles from './PostListItem.styles';
 
-const PostListItem = ({ post: { id, category, title, img, created_at } }) => {
+const PostListItem = ({ post: { id, category, title, img, createdAt } }) => {
   const classes = useStyles();
   const imageUrl = `${apiUrl}uploads/${img.filename}`;
-  const date = created_at.split(' ')[0];
-  const time = created_at.split(' ')[1];
+  const date = createdAt.split(' ')[0];
+  const time = createdAt.split(' ')[1];
   return (
     <Card key={id} className={classes.card}>
       <div
@@ -57,7 +57,7 @@ PostListItem.propTypes = {
     img: PropTypes.shape({
       filename: PropTypes.string.isRequired,
     }),
-    created_at: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
   }).isRequired,
 };
 

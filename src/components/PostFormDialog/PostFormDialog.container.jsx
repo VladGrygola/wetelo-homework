@@ -9,6 +9,7 @@ import {
 import { selectCurrentUserToken } from '../../redux/user/user.selectors';
 
 import { addPostAsync } from '../../redux/postDialog/postDialog-thunk-actions/addPost';
+import { editPostAsync } from '../../redux/postDialog/postDialog-thunk-actions/editPost';
 
 import PostFormDialog from './PostFormDialog';
 
@@ -20,6 +21,8 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   addPost: (token, post) => dispatch(addPostAsync(token, post)),
+  editPost: (userToken, body, id) =>
+    dispatch(editPostAsync(userToken, body, id)),
 });
 
 const PostFormDialogContainer = connect(

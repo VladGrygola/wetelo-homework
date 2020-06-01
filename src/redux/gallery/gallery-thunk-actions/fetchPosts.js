@@ -1,3 +1,4 @@
+import camelcaseKeys from 'camelcase-keys';
 import GalleryActionTypes from '../gallery.types';
 import { stokkApi as api, queryString } from '../../../utils/api';
 
@@ -25,17 +26,21 @@ const defaultParams = {
 export const fetchPostsAsync = (token, params = defaultParams) => {
   return async (dispatch) => {
     dispatch(fetchPostsStarted());
-    const queryParams = queryString(params);
-    const response = await api(`api/posts?${queryParams}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (response.error) dispatch(fetchPostsFailure(response.error));
-    else {
-      const { data, ...queryResponse } = response;
-      dispatch(fetchPostsSuccess(data, queryResponse));
+    try {
+      const queryParams = queryString(params);
+      const response = await api(`api/posts?${queryParams}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.error) dispatch(fetchPostsFailure(response.error));
+      else {
+        const { data, ...queryResponse } = response;
+        dispatch(fetchPostsSuccess(camelcaseKeys(data), queryResponse));
+      }
+    } catch (error) {
+      dispatch(fetchPostsFailure(error));
     }
   };
 };

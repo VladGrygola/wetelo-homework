@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
 import { Formik } from 'formik';
@@ -15,10 +15,14 @@ import {
 
 import MuiAlert from '@material-ui/lab/Alert';
 
+import { apiUrl } from '../../constants/api';
+
 import TextFieldWithError from '../TextFieldWithError/TextFieldWithError';
 import AsyncAutocompleteCategoryContainer from '../AsyncAutocompleteCategoty/AsyncAutocompleteCategory.container';
 import ImageUploadContainer from '../ImageUploadContainer/ImageUploadContainer';
 import ImageUploadButton from '../ImageUploadButton/ImageUploadButton';
+
+import useStyles from './PostFormDialog.styles';
 
 const PostFormDialog = ({
   isOpen,
@@ -28,9 +32,40 @@ const PostFormDialog = ({
   isSubmittingQuery,
   error,
   addPost,
+  editPost,
   userToken,
 }) => {
   const [isVisibleResult, setIsVisibleResult] = useState(false);
+  const [isDownloadingPostImage, setIsDownloadingPostImage] = useState(false);
+  const [initialValues, setInitialValues] = useState({
+    title: post ? post.title : '',
+    description: post && post.description ? post.description : '',
+    category: post ? { name: post.category.title, id: post.category.id } : '',
+    image: undefined,
+  });
+
+  const classes = useStyles();
+
+  useEffect(() => {
+    if (post)
+      (async () => {
+        setIsDownloadingPostImage(true);
+        const image = await fetch(`${apiUrl}uploads/${post.img.filename}`)
+          .then((i) => i.blob())
+          .then(
+            (b) =>
+              new File([b], post.img.filename, {
+                lastModified: post.img.updatedAt,
+                type: post.img.type,
+              })
+          );
+        const initialValuesWithImage = { ...initialValues, image };
+        setInitialValues(initialValuesWithImage);
+        setIsDownloadingPostImage(false);
+      })();
+    // eslint-disable-next-line
+  }, [post]);
+
   const onSubmit = ({ title, category, image, description }, actions) => {
     const body = {
       title,
@@ -38,7 +73,10 @@ const PostFormDialog = ({
       image,
       description,
     };
-    addPost(userToken, body);
+
+    if (post) editPost(userToken, body, post.id);
+    else addPost(userToken, body);
+
     setIsVisibleResult(true);
     setTimeout(() => {
       setIsVisibleResult(false);
@@ -53,8 +91,10 @@ const PostFormDialog = ({
   });
   return (
     <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-      <DialogTitle>{post ? 'Edit image' : 'Create image'}</DialogTitle>
-      {isSubmittingQuery ? (
+      <DialogTitle className={classes.title}>
+        {post ? 'Edit image' : 'Create image'}
+      </DialogTitle>
+      {isSubmittingQuery || isDownloadingPostImage ? (
         <Grid container justify='center' style={{ height: '74px' }}>
           <Grid item>
             <CircularProgress />
@@ -63,12 +103,7 @@ const PostFormDialog = ({
       ) : (
         <Formik
           validationSchema={validationSchema}
-          initialValues={{
-            title: '',
-            description: '',
-            category: null,
-            image: null,
-          }}
+          initialValues={initialValues}
           onSubmit={onSubmit}
         >
           {({
@@ -82,7 +117,7 @@ const PostFormDialog = ({
             isSubmitting,
           }) => (
             <form onSubmit={handleSubmit}>
-              <DialogContent>
+              <DialogContent className={classes.content}>
                 <Grid item>
                   <ImageUploadContainer file={values.image} />
                 </Grid>
@@ -130,7 +165,7 @@ const PostFormDialog = ({
                       isVisibleError={errors.description && touched.description}
                       errorMessage={errors.description}
                       label='description'
-                      value={values.description}
+                      value={values.description ? values.description : ''}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       disabled={isSubmitting}

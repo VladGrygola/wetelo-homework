@@ -62,7 +62,7 @@ PostList.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
-      created_at: PropTypes.string.isRequired,
+      createdAt: PropTypes.string.isRequired,
       category: PropTypes.shape({
         title: PropTypes.string.isRequired,
       }),
