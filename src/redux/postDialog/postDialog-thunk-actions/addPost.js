@@ -1,6 +1,8 @@
+import camelcaseKeys from 'camelcase-keys';
 import { objectToFormData } from 'object-to-formdata';
 import PostDialogActionTypes from '../postDialog.types';
 import { stokkApi as api } from '../../../utils/api';
+import { appendPost } from '../../gallery/gallery.actions';
 
 export const addPostStart = () => ({
   type: PostDialogActionTypes.ADD_POST_STRART,
@@ -28,8 +30,11 @@ export const addPostAsync = (token, post) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (response.model) dispatch(addPostSuccess(response.model));
-      else dispatch(addPostFaliure(response));
+      if (response.model) {
+        const newPost = camelcaseKeys(response.model);
+        dispatch(addPostSuccess(newPost));
+        dispatch(appendPost(newPost));
+      } else dispatch(addPostFaliure(response));
     } catch (e) {
       dispatch(addPostFaliure(e));
     }

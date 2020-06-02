@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography } from '@material-ui/core';
 
-import PostListItem from '../PostListItem/PostListItem';
+import PostListItemContainer from '../PostListItem/PostListItem.container';
 import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
 import LoadingSpinnerBlock from '../LoadingSpinnerBlock/LoadingSpinnerBlock';
 
@@ -36,7 +36,7 @@ const PostList = ({
         {!!queryResponse.total &&
           posts.map((post) => (
             <Grid item xs={12} sm={6} key={post.id}>
-              <PostListItem post={post} key={post.id} />
+              <PostListItemContainer post={post} key={post.id} />
             </Grid>
           ))}
       </Grid>

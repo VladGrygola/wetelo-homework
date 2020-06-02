@@ -4,6 +4,8 @@ import GalleryActionTypes from './gallery.types';
 
 const defaultState = {
   posts: [],
+  deletingMode: false,
+  idsOfSelectedPosts: [],
   isLoadingPosts: true,
   isLoadingNextPagePosts: false,
   isLoadingPostById: false,
@@ -51,14 +53,25 @@ const galleryReducer = handleActions(
     [GalleryActionTypes.FETCH_NEXT_PAGE_POSTS_SUCCESS]: (
       state,
       { payload }
-    ) => ({
-      ...state,
-      isLoadingNextPagePosts: false,
-      fetchError: null,
-      posts: [...state.posts, ...payload.posts],
-      queryResponse: payload.queryResponse,
-      queryParams: { ...state.queryParams, page: state.queryParams.page + 1 },
-    }),
+    ) => {
+      const filteredList = [];
+
+      // Removing old data that now can be edited
+      state.posts.forEach((post) => {
+        if (!payload.posts.some((some) => some.id === post.id)) {
+          filteredList.push(post);
+        }
+      });
+
+      return {
+        ...state,
+        isLoadingNextPagePosts: false,
+        fetchError: null,
+        posts: [...filteredList, ...payload.posts],
+        queryResponse: payload.queryResponse,
+        queryParams: { ...state.queryParams, page: state.queryParams.page + 1 },
+      };
+    },
     [GalleryActionTypes.FETCH_NEXT_PAGE_POSTS_FALIURE]: (
       state,
       { payload }
@@ -94,6 +107,12 @@ const galleryReducer = handleActions(
         posts: [...posts, payload],
       };
     },
+    [GalleryActionTypes.APPEND_POST]: (state, { payload }) => {
+      return {
+        ...state,
+        posts: [...state.posts, payload],
+      };
+    },
     [GalleryActionTypes.DELETE_POST_START]: (state) => ({
       ...state,
       isLoadingPostById: true,
@@ -108,6 +127,32 @@ const galleryReducer = handleActions(
       isLoadingPostById: false,
       deleteError: null,
       posts: state.posts.filter((p) => p.id !== payload),
+    }),
+    [GalleryActionTypes.SET_IDS_OF_SELECTED_POSTS]: (state, { payload }) => ({
+      ...state,
+      idsOfSelectedPosts: payload,
+    }),
+    [GalleryActionTypes.SET_DELETING_MODE]: (state, { payload }) => ({
+      ...state,
+      deletingMode: payload,
+    }),
+    [GalleryActionTypes.DELETE_POSTS_START]: (state) => ({
+      ...state,
+      isLoadingPosts: true,
+    }),
+    [GalleryActionTypes.DELETE_POSTS_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      isLoadingPosts: false,
+      deleteError: null,
+      posts: state.posts.filter(
+        (post) =>
+          !payload.some((id) => parseInt(post.id, 10) === parseInt(id, 10))
+      ),
+    }),
+    [GalleryActionTypes.DELETE_POSTS_FALIURE]: (state, { payload }) => ({
+      ...state,
+      isLoadingPosts: false,
+      deleteError: payload,
     }),
   },
   defaultState

@@ -7,13 +7,38 @@ import { apiUrl } from '../../constants/api';
 
 import useStyles from './PostListItem.styles';
 
-const PostListItem = ({ post: { id, category, title, img, createdAt } }) => {
+const PostListItem = ({
+  post: { id, category, title, img, createdAt },
+  deletingMode,
+  setIdsOfSelectedPosts,
+  idsOfSelectedPosts,
+}) => {
   const classes = useStyles();
   const imageUrl = `${apiUrl}uploads/${img.filename}`;
   const date = createdAt.split(' ')[0];
   const time = createdAt.split(' ')[1];
+  const selected = idsOfSelectedPosts.includes(id);
+
+  const handleClick = () => {
+    if (selected) {
+      const idIndex = idsOfSelectedPosts.indexOf(id);
+      const newList = [
+        ...idsOfSelectedPosts.slice(0, idIndex),
+        ...idsOfSelectedPosts.slice(idIndex + 1),
+      ];
+      setIdsOfSelectedPosts(newList);
+    } else {
+      setIdsOfSelectedPosts([...idsOfSelectedPosts, id]);
+    }
+  };
+  const cardStyle = { opacity: deletingMode && !selected ? 0.5 : 1 };
   return (
-    <Card key={id} className={classes.card}>
+    <Card
+      key={id}
+      className={classes.card}
+      onClick={handleClick}
+      style={cardStyle}
+    >
       <div
         className={classes.image}
         style={{

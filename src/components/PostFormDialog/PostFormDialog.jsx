@@ -198,7 +198,8 @@ const PostFormDialog = ({
       {error && <Typography color='error'>{JSON.stringify(error)}</Typography>}
       {isVisibleResult && error === null && (
         <MuiAlert elevation={6} variant='filled' severity='success'>
-          Post added!
+          Post
+          {post ? 'edited' : 'added'}!
         </MuiAlert>
       )}
       {isVisibleResult && error && (

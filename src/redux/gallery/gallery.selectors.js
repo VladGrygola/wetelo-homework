@@ -42,3 +42,18 @@ export const selectNotFoundList = createSelector(
   [selectGalleryReducer],
   (gallery) => gallery.notFoundList
 );
+
+export const selectDeletingMode = createSelector(
+  [selectGalleryReducer],
+  (gallery) => gallery.deletingMode
+);
+
+export const selectIdsOfSelectedPosts = createSelector(
+  [selectGalleryReducer],
+  (gallery) => gallery.idsOfSelectedPosts
+);
+
+export const selectThereAreSelectedPosts = createSelector(
+  [selectGalleryReducer],
+  (gallery) => !!gallery.idsOfSelectedPosts.length
+);

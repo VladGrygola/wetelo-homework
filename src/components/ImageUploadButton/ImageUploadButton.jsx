@@ -17,7 +17,7 @@ const ImageUploadButton = ({
         id={name}
         {...otherProps}
         type='file'
-        accept='image/*'
+        accept='image/jpeg'
         style={{ display: 'none' }}
       />
     </Button>

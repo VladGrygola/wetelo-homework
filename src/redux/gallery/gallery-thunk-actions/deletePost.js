@@ -28,6 +28,7 @@ export const deletePostAsync = (token, id) => {
       if (response.model) dispatch(deletePostSuccess(response.model.id));
       else dispatch(deletePostFailure(response));
     } catch (error) {
+      console.log(error);
       dispatch(deletePostFailure(error));
     }
   };
